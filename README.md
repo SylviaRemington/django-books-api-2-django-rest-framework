@@ -1,5 +1,7 @@
 # Lecture Practice of Creating Django Rest Framework API
 
+<br>
+
 # Django Rest Framework API Step By Step Instructions
 
 Author: Tristan Hall
