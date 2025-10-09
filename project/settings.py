@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'books',
+    'authors',
 ]
 
 AUTH_USER_MODEL = 'authentication.User'

@@ -15,4 +15,3 @@ class Book(models.Model):
         related_name = "books",
         on_delete = models.CASCADE
     )
-    
