@@ -19,3 +19,16 @@ class BookListView(APIView):
         # return the serialized data and a 200 status code
         return Response(serialized_books.data, status=status.HTTP_200_OK)
     
+    def post(self, request):
+        request.data["owner"] = request.user.id
+        book_to_add = BookSerializer(data=request.data)
+        try:
+           book_to_add.is_valid()
+           book_to_add.save()
+           return Response(book_to_add.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Error")
+            # the below is necessary because two different formats of errors are possible. string or object format.
+            # if it's string then e.__dict__ returns an empty dict {}
+            # so we'll check it's a dict first, and if it's empty (falsey) then we'll use str() to convert to a string
+            return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
