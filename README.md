@@ -1,6 +1,5 @@
-# Lecture Practice of Creating Django Rest Framework API
+### Lecture Practice of Creating Django Rest Framework API:
 
-<br>
 
 # Django Rest Framework API Step By Step Instructions
 
