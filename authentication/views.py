@@ -20,3 +20,25 @@ class RegisterView(APIView):
             return Response({'message': 'Registration successful'}, status=status.HTTP_202_ACCEPTED)
         return Response(user_to_create.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+class LoginView(APIView):
+
+    def post(self, request):
+        # get data from the request
+        email = request.data.get('email')
+        password = request.data.get('password')
+        try:
+            user_to_login = User.objects.get(email=email) # get user with email
+        except User.DoesNotExist:
+            raise PermissionDenied(detail='Invalid Credentials') # throw error
+        if not user_to_login.check_password(password):
+            raise PermissionDenied(detail='Invalid Credentials')
+
+        # timedelta can be used to calculate the difference between dates - passing 7 days gives you 7 days represented as a date that we can add to datetime.now() to get the date 7 days from now
+        dt = datetime.now() + timedelta(days=7) # validity of token
+        token = jwt.encode(
+            {'sub': str(user_to_login.id), 'exp': int(dt.strftime('%s'))}, # strftime -> string from time and turning it into a number
+            settings.SECRET_KEY,
+            algorithm='HS256'
+        )
+        return Response({ 'token': token, 'message': f"Welcome back {user_to_login.username}"})
+    
