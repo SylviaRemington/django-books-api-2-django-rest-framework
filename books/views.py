@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly # IsAuthenticatedOrReadOnly specifies that a view is secure on all methods except get requests
 
 # Create your views here.
+
 # Starting with the GET method to retrieve all books.
 class BookListView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly, ) # sets the permission levels of the specific view by passing in the rest framework authentication class
@@ -34,3 +36,42 @@ class BookListView(APIView):
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
+class BookDetailView(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly, ) # sets the permission levels of the specific view by passing in the rest framework authentication class
+
+    # custom method to retrieve a book from the DB and error if it's not found
+    def get_book(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            raise NotFound(detail="Can't find that book") # <-- import the NotFound exception from rest_framwork.exceptions
+
+    def get(self, _request, pk):
+        try:
+            book = Book.objects.get(pk=pk)
+            serialized_book = BookSerializer(book)
+            return Response(serialized_book.data, status=status.HTTP_200_OK)
+        except Book.DoesNotExist:
+            raise NotFound(detail="Can't find that book") # <-- import the NotFound exception from rest_framwork.exceptions
+
+    def put(self, request, pk):
+        book_to_update = self.get_book(pk=pk)
+        if book_to_update.owner != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        updated_book = BookSerializer(book_to_update, data=request.data)
+        if updated_book.is_valid():
+            updated_book.save()
+            return Response(updated_book.data, status=status.HTTP_202_ACCEPTED)
+
+        return Response(updated_book.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def delete(self, request, pk):
+        book_to_delete = self.get_book(pk=pk)
+
+        if book_to_delete.owner != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        book_to_delete.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
