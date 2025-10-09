@@ -32,3 +32,5 @@ class BookListView(APIView):
             # if it's string then e.__dict__ returns an empty dict {}
             # so we'll check it's a dict first, and if it's empty (falsey) then we'll use str() to convert to a string
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+
