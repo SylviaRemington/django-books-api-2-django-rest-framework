@@ -1,5 +1,5 @@
-### Lecture Practice of Creating Django Rest Framework API:
-
+### Lecture Practice of Creating Django Rest Framework API: <br>
+(Also, there are some errors in the original code he sent below. I've sent this info to the original doc for Tristan to review and change.)
 
 # Django Rest Framework API Step By Step Instructions
 
@@ -1482,3 +1482,6 @@ urlpatterns = [
 Congratulations, you've created a Django/Python API using Django Rest Framework (DRF), with 4 data entities (users, books, authors & comments) and exposes it's endpoints so it can be consumed from any front end application (like react.js)
 
 Next up, create a front end to complete building your full stack application!
+
+
+
