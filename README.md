@@ -1,5 +1,6 @@
 ### Lecture Practice of Creating Django Rest Framework API: <br>
-(Also, there are some errors in the original code he sent below. I've sent this info to the original doc for Tristan to review and change.)
+(Also, there are some errors in the original code he sent below. I've sent this info to the original doc for Tristan to review and change.) <br>
+**This is the second attempt at creating an api. In this one, I started playing around with the code & this needs to be debugged.**
 
 # Django Rest Framework API Step By Step Instructions
 
